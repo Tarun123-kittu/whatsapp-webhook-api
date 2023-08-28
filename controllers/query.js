@@ -1,9 +1,12 @@
 //to verify the callback url from dashboard side - cloud api side
 const qaData = require('../queries')
 const axios = require("axios");
+require('dotenv').config();
 const token = process.env.TOKEN;
 const mytoken = process.env.MYTOKEN;
-require('dotenv').config();
+const queries = require("../models/queries")
+
+
 
 exports.test1 = async (req, res) => {
     res.status(200).send("working");
@@ -114,8 +117,164 @@ exports.webhook_ = async (req, res) => {
 
 };
 
-exports.login=async (req,res)=>{
-    res.render('login')
+exports.addqueries = async (req, res) => {
+    try {
+
+        let obj = [
+            {
+                "question": "Which products do we find in apartment/home?",
+                "answer": "Towels and linen, soap for dishes and hands, a piece of toilet paper, sponge for dishes and teacloth.",
+                "step": 1
+            },
+            {
+                "question": "Troubles with safety box for keys, how it works?",
+                "answer": "Look at the videos which we sent you before your arrival, insert the code and push down the black button to unlock.",
+                "step": 2
+            },
+            {
+                "question": "Wifi; password?",
+                "answer": "In apartment you’ll find a book with all informations and the wifi password. If not in the book check under the router or nera it, you’ll find it written",
+                "step": 3
+            },
+            {
+                "question": "Is there a parking lot?",
+                "answer": "Most of your homes have a parking lot, please check informations which we sent you or the book which is in your apartment. Please respect your assigned parking lot, in order to not create uneases to the other guests or owners.",
+                "step": 4
+            },
+            {
+                "question": "Is tap water drinkable ?",
+                "answer": "Yes sure. If there’ll be unforeseen communications we immediately comunicate you.",
+                "step": 5
+            },
+            {
+                "question": "Where put rubbish?",
+                "answer": "Please remember that separate garbage it’s really important to respect our beautiful environment . Outside of your home you find bins to put garbage. If you don’t remember or don’t know how to do, check on the book you have in apartment. Thanks in advance to help us in this important activity!",
+                "step": 6
+            },
+            {
+                "question": "Missing Electricity /electricity lack",
+                "answer": "Follow instruction that we sent you in the video before your arrival",
+                "step": 7
+            },
+            {
+                "question": "It’s possibile early check in?",
+                "answer": "Available on demand and if possibile at the price of € 30",
+                "step": 8
+            },
+            {
+                "question": "It’s possibile late check out?",
+                "answer": "Available on demand and if possibile at the price of € 30",
+                "step": 9
+            }
+        ]
+
+        await queries.create(obj)
+        return res.send("success")
+
+    } catch (error) {
+        console.log("ERROR::", error)
+    }
 }
 
+exports.getqueries = async (req, res) => {
+    try {
+        let result = await queries.find();
+        res.render('dashboard', { result: result }); // Pass the 'queries' data to the template
+    } catch (error) {
+        console.log("ERROR::", error);
+    }
+};
 
+exports.updatequeries = async (req, res) => {
+    try {
+
+        let { question, answer, step } = req.body;
+        let id = req.query.id;
+        console.log("Query ID:", id);
+
+        const updatedQuery = await queries.findOneAndUpdate(
+            { _id: id },
+            { $set: { question: question, answer: answer, step: step } },
+            { new: true } // Return the updated document
+        );
+
+        return res.redirect("/dashboard")
+    } catch (error) {
+        console.log("ERROR::", error);
+        res.status(500).send("Error updating query");
+    }
+}
+
+exports.deletequeries = async (req, res) => {
+    try {
+        const id = req.query.id;
+
+        // Find the document being deleted to determine its step value
+        const docToDelete = await queries.findOne({ _id: id });
+
+        if (!docToDelete) {
+            return res.status(404).send("Query not found.");
+        }
+
+        // Delete the document
+        await queries.deleteOne({ _id: id });
+
+        // Update step values for remaining documents
+        await queries.updateMany(
+            { step: { $gt: docToDelete.step } },
+            { $inc: { step: -1 } }
+        );
+
+        return res.send("Selected query deleted successfully");
+    } catch (error) {
+        console.log("ERROR::", error);
+        res.status(500).send("Error occurred while deleting query.");
+    }
+};
+
+exports.dashboard = async (req, res) => {
+    try {
+        let result = await queries.find();
+        res.render('dashboard', { result: result });
+        
+    } catch (error) {
+        console.log("ERROR::", error);
+    }
+}
+
+exports.getqueriebyid = async (req, res) => {
+    try {
+        let id = req.query.id;
+
+        let query = await queries.findOne({ _id: id });
+
+        res.render('updatequerie', { query: query });
+    } catch (error) {
+        console.log("ERROR::", error);
+    }
+}
+
+exports.addmorequerie = async (req, res) => {
+    res.render("addqueries")
+}
+
+exports.addquerie = async (req, res) => {
+    let { question, answer } = req.body
+    if (!question || !answer) {
+        return res.send("fill all the fields")
+    }
+    let result = await queries.find()
+    if (!result) {
+        result = 1
+    }
+    let obj = {
+        question: question,
+        answer: answer,
+        step: result.length + 1
+    }
+
+    await queries.create(obj)
+    return res.redirect("/dashboard")
+    // return res.send("record added successfully")
+
+}   

@@ -1,4 +1,6 @@
 let queries = require("../controllers/query")
+let user = require("../controllers/user")
+let auth = require("../middleware/auth")
 
 module.exports = (app) => {
 
@@ -10,7 +12,30 @@ module.exports = (app) => {
 
     app.post("/webhook", queries.webhook_)
 
-    app.get("/",queries.login)
+    app.post("/login",user.login)
 
+    app.post("/add_queries",queries.addqueries)
 
+    app.get("/get_queries",queries.getqueries)
+
+    app.post("/update_queries",queries.updatequeries)
+
+    app.delete("/delete_queries",auth,queries.deletequeries)
+
+    app.get("/dashboard",queries.dashboard) 
+
+    app.get("/get_queriebyid",queries.getqueriebyid)
+
+    app.get("/add_morequerie",queries.addmorequerie)
+
+    app.post("/add_querie",queries.addquerie)
+
+    app.get("/forget_password_",user.getforgetpassword)
+
+    app.post("/forget_password",user.forgetpassword)
+
+    app.get("/verify_otp_",user.getverifyotp)
+
+    app.post("/verify_otp",user.verifyotp)
+    
 }

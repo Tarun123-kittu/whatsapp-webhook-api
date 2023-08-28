@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Update Query</title>
+</head>
+<body>
+    <h1>Update Query</h1>
+    <form action="/update_queries?id=<%= query.id %>" method="POST">
+        <label for="question">Question:</label>
+        <input type="text" id="question" name="question" value="<%= query.question %>" required><br><br>
+        <label for="answer">Answer:</label>
+        <textarea id="answer" name="answer" required><%= query.answer %></textarea><br><br>
+        <button type="submit" >Update</button>
+    </form>
+</body>
+</html>

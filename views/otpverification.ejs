@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>verify otp</title>
+</head>
+<body>
+    <h1>Verify otp</h1>
+    <p>Enter your received otp to continue.</p>
+    
+    <form action="/verify_otp" method="post" id="verifyotpForm">
+        <label for="otp">Email:</label>
+        <input type="otp" id="otp" name="otp" required>
+        <button type="submit" >submit otp</button> <button> resend otp </button>
+    </form>
+    
+    <div id="message"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script>
+    document.getElementById('verifyotpForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        
+        const otp = document.getElementById('otp').value;
+    
+        
+        const response = await fetch('/verify_otp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ otp })
+        });
+        
+        const responseData = await response.json();
+        let message=responseData
+       
+        if (response.ok) {
+            Toastify({
+                text: message,
+                duration: 3000, // Duration of the toast message in milliseconds
+                backgroundColor: 'green',
+                close: true
+            }).showToast();
+        } else {
+            Toastify({
+                text: message,
+                duration: 3000,
+                backgroundColor: 'red',
+                close: true,
+                
+            }).showToast();
+        }
+    });
+</script>
+
+</body>
+</html>

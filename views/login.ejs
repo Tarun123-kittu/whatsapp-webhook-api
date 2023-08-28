@@ -1,18 +1,66 @@
 <!DOCTYPE html> 
 <html> 
 <head> 
-    <title></title> 
+    <title>Login</title> 
 </head> 
 <body> 
-    <form>  
+    <form action="/login" method="post" >  
         <div class="container">   
             <label>Username : </label>   
-            <input type="text"    placeholder="Enter Username"  name="username" required>  
+            <input type="text" placeholder="email" id="email" name="email" required>  
             <label>Password : </label>   
-            <input type="password" placeholder="Enter Password" name="password" required>  
+            <input type="password" placeholder="Enter Password" id="password" name="password" required>  
             <button type="submit">Login</button>    
-            Forgot <a href="#"> password? </a>   
+            Forgot <a href="/forget_password_"> password? </a>   
         </div> 
-    </form>       
+    </form>   
+    <script>
+        document.querySelector('form').addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent default form submission
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, password })
+            });
+           
+            if (response.ok) {
+            const responseData = await response.json();
+            
+            if (responseData.data) {
+                const token = responseData.data.token;
+                
+                // Store the token in localStorage
+               localStorage.setItem('token', token);
+               const token_ = localStorage.getItem("token")
+                
+                 await fetch(`/dashboard`, {
+                    method: 'GET',
+                    headers:{
+                        'Authorization': `Bearer ${token_}`
+                    }
+                });
+                
+                // if (dashboardResponse.ok) {
+                //     // Redirect to the dashboard
+                    window.location.href = 'dashboard';
+                // } else {
+                //     console.error('Failed to fetch dashboard');
+                // }
+            } else {
+                console.error('Token not found in response data');
+            }
+        } else {
+            console.error('Login failed');
+        }
+        });
+    </script>
 </body> 
-</html> 
+</html>
+
+

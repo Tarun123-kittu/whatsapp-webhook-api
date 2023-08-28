@@ -1,11 +1,21 @@
 const express = require("express");
 const body_parser = require("body-parser");
+const mongoose= require("mongoose")
+const cors= require("cors")
 
 // const axios = require("axios");
 // const qaData = require('./queries')
 require('dotenv').config();
 
+
+
+
 const app = express().use(body_parser.json());
+app.use(cors());
+app.use(express.json())
+app.use(express.text())
+app.use(express.urlencoded({extended:true}))
+app.use(express.static(__dirname + '/views'));
 
 // const token = process.env.TOKEN;
 // const mytoken = process.env.MYTOKEN;
@@ -19,6 +29,24 @@ require('./routes/routes')(app);
 app.listen(process.env.PORT, () => {
     console.log("webhook is listening");
 });
+
+
+mongoose.set('strictQuery', false);
+mongoose.connect("mongodb://127.0.0.1:27017/whatsShare?readPreference=primary&directConnection=true&ssl=false",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }
+);
+
+app.get('/', (req, res) => {
+  res.render('login'); // Renders views/dashboard.ejs
+});
+
+
+
+
+
 
 //to verify the callback url from dashboard side - cloud api side
 // app.get("/webhook", (req, res) => {

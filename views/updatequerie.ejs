@@ -5,7 +5,7 @@
 </head>
 <body>
     <h1>Update Query</h1>
-    <form action="/update_queries?id=<%= query.id %>" method="POST">
+    <form action="/update_queries" method="POST" id="updatequerie">
         <label for="question">Question:</label>
         <input type="text" id="question" name="question" value="<%= query.question %>" required><br><br>
         <label for="answer">Answer:</label>
@@ -13,4 +13,42 @@
         <button type="submit" >Update</button>
     </form>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+         document.getElementById('updatequerie').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const question = document.getElementById('question').value;
+            const answer=document.getElementById("answer").value;
+            const urlParams = new URLSearchParams(window.location.search);
+          const id = urlParams.get('id');
+            const response = await fetch(`/update_queries?id=${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ question,answer })
+            });
+            const responseData = await response.json();
+            let message=responseData
+            if (response.ok) {
+                Toastify({
+                    text: message,
+                    duration: 3000, // Duration of the toast message in milliseconds
+                    backgroundColor: 'green',
+                    close: true
+                }).showToast();
+                if(message==="query updated"){
+                  window.location.href='dashboard'
+                }
+            } else {
+                Toastify({
+                    text: "Unauthorized user",
+                    duration: 3000,
+                    backgroundColor: 'red',
+                    close: true,
+                }).showToast();
+            }
+        });
+    
+    </script>
 </html>

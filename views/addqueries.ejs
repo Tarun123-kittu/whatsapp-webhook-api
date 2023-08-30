@@ -5,7 +5,7 @@
     </head>
     <body>
         <h1>Add a querie</h1>
-        <form action="/add_querie" method="post">
+        <form action="/add_querie" method="post" id="addqueries">
             <label for="question">question:</label><br>
             <input placeholder="question" type="text" id="question" name="question" ><br><br>
             <label for="answer">answer:</label><br>
@@ -13,4 +13,41 @@
             <button type="submit">submit</button>    
           </form> 
     </body>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+         document.getElementById('addqueries').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const question = document.getElementById('question').value;
+            const answer=document.getElementById("answer").value;
+            const response = await fetch(`/add_querie`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ question,answer })
+            });
+            const responseData = await response.json();
+            let message=responseData
+            if (response.ok) {
+                Toastify({
+                    text: message,
+                    duration: 3000, // Duration of the toast message in milliseconds
+                    backgroundColor: 'green',
+                    close: true
+                }).showToast();
+                if(message==="query added"){
+                  window.location.href='dashboard'
+                }
+            } else {
+                Toastify({
+                    text: message,
+                    duration: 3000,
+                    backgroundColor: 'red',
+                    close: true,
+                    
+                }).showToast();
+            }
+        });
+    
+    </script>
 </html>

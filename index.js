@@ -2,6 +2,11 @@ const express = require("express");
 const body_parser = require("body-parser");
 const mongoose= require("mongoose")
 const cors= require("cors")
+const session = require("express-session")
+// var cookieParser = require('cookie-parser')
+
+// ... other code ...
+
 
 // const axios = require("axios");
 // const qaData = require('./queries')
@@ -9,13 +14,21 @@ require('dotenv').config();
 
 
 
-
 const app = express().use(body_parser.json());
+app.use(body_parser.urlencoded({extended: true}));
 app.use(cors());
 app.use(express.json())
 app.use(express.text())
 app.use(express.urlencoded({extended:true}))
 app.use(express.static(__dirname + '/views'));
+app.use(session({
+  secret: 'your_session_secret', // Use a strong secret for production
+  resave: false,
+  saveUninitialized: true
+}));
+// app.use(cookieParser())
+
+
 
 // const token = process.env.TOKEN;
 // const mytoken = process.env.MYTOKEN;
@@ -31,6 +44,8 @@ app.listen(process.env.PORT, () => {
 });
 
 
+
+
 mongoose.set('strictQuery', false);
 mongoose.connect("mongodb://127.0.0.1:27017/whatsShare?readPreference=primary&directConnection=true&ssl=false",
   {
@@ -40,8 +55,13 @@ mongoose.connect("mongodb://127.0.0.1:27017/whatsShare?readPreference=primary&di
 );
 
 app.get('/', (req, res) => {
-  res.render('login'); // Renders views/dashboard.ejs
+  
+let user={
+  name:"akshita"
+}
+  res.render('login',{user:user}); // Renders views/dashboard.ejs
 });
+
 
 
 

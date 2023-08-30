@@ -1,50 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
+
 </head>
 <body class="container">
     <main>
-       
-        <button class="logout-button" >logout</button>
+        <button class="logout-button" >logout</button> <button> <a href="/change_password"> change password </a></button>
         <div>
-            
             <h1>Welcome to the Dashboard</h1><button ><a href="/add_morequerie">Add a querie</a></button>
-            
             <ul>
-                <% result.forEach(item => { %>
+                <% result.forEach((item)=> { %>
                     <li>
                         <h2><%= item.question %></h2>
                         <p><%= item.answer %></p>
                         <p><%= item.step %></p>
                         <button class="delete-button" data-id="<%= item._id %>">delete</button>
-                       <button> <a href="/get_queriebyid?id=<%= item._id %>">update</a></button>
+                       <button> <a href="/updatequery?id=<%= item._id %>">update</a></button>
                     </li>
                 <% }); %>
             </ul>
-            
         </div>
         
     </main>
+
 </body>
+
 <script>
     const deleteButtons = document.querySelectorAll('.delete-button');
-
+     
     deleteButtons.forEach(button => {
         button.addEventListener('click', async () => {
             const id = button.getAttribute('data-id');
             try {
-                const token = localStorage.getItem("token")
-                if(!token){
-                    window.location.href = 'login';
-                }
                 const response = await fetch(`/delete_queries?id=${id}`, {
                     method: 'DELETE',
-                    headers:{
-                        'Authorization': `Bearer ${token}`
-                    }
+                    headers: {
+                    'Content-Type': 'application/json'
+                },
                 });
-
                 if (response.ok) {
                     // Remove the deleted item's HTML from the DOM
                     const listItem = button.parentElement;
@@ -62,11 +55,13 @@
     const logoutbutton = document.querySelectorAll('.logout-button');
     logoutbutton.forEach(button => {
         button.addEventListener('click', async () => {
-        localStorage.removeItem("token")
-        window.location.href = '/';
+            const response = await fetch(`/logout`, {
+                    method: 'POST', 
+                });
+               window.location.href='/'
     })
 })
+
 </script>
 </html>
-
 

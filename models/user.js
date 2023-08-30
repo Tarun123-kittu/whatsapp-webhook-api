@@ -5,6 +5,7 @@ let userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     token: {type: String},
+    resend_otptoken:{type:String},
     otp:{type:Number},
     otp_createdAt:{String},
     otp_verified:{ type:Boolean,default:false},

@@ -16,17 +16,15 @@ module.exports = (app) => {
 
     app.post("/add_queries",queries.addqueries)
 
-    app.get("/get_queries",queries.getqueries)
-
-    app.post("/update_queries",queries.updatequeries)
-
+    app.post("/update_queries",auth,queries.updatequeries)
+     
     app.delete("/delete_queries",auth,queries.deletequeries)
 
-    app.get("/dashboard",queries.dashboard) 
+    app.get("/dashboard",auth,queries.dashboard) 
 
-    app.get("/get_queriebyid",queries.getqueriebyid)
+    app.get("/updatequery",auth,queries.getqueriebyid)
 
-    app.get("/add_morequerie",queries.addmorequerie)
+    app.get("/add_morequerie",auth,queries.addmorequerie)
 
     app.post("/add_querie",queries.addquerie)
 
@@ -37,5 +35,16 @@ module.exports = (app) => {
     app.get("/verify_otp_",user.getverifyotp)
 
     app.post("/verify_otp",user.verifyotp)
+
+    app.post("/resend_otp",user.resendotp)
+
+    app.get("/reset_password_",user.getresetpassword)
+
+    app.post('/reset_password',user.resetpassword)
+
+    app.post('/logout',user.logout)
     
+    app.get("/change_password",auth,user.getchangepassword)
+
+    app.post("/changepassword",auth,user.changepassword)
 }

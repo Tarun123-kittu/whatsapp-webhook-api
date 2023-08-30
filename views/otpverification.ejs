@@ -10,9 +10,9 @@
     <p>Enter your received otp to continue.</p>
     
     <form action="/verify_otp" method="post" id="verifyotpForm">
-        <label for="otp">Email:</label>
+        <label for="otp">OTP:</label>
         <input type="otp" id="otp" name="otp" required>
-        <button type="submit" >submit otp</button> <button> resend otp </button>
+        <button type="submit" >submit otp</button> <button class="resend-otp-button" > resend otp </button>
     </form>
     
     <div id="message"></div>
@@ -24,7 +24,6 @@
         
         const otp = document.getElementById('otp').value;
     
-        
         const response = await fetch('/verify_otp', {
             method: 'POST',
             headers: {
@@ -35,7 +34,9 @@
         
         const responseData = await response.json();
         let message=responseData
-       
+       if (message==="otp verified"){
+        window.location.href='/reset_password_'
+       }
         if (response.ok) {
             Toastify({
                 text: message,
@@ -53,6 +54,47 @@
             }).showToast();
         }
     });
+    const resendotpbutton = document.querySelectorAll('.resend-otp-button');
+
+    resendotpbutton.forEach(button => {
+    button.addEventListener('click', async () => {
+        const id = button.getAttribute('data-id');
+        try {
+            
+            // Get the email from the stored session/cookie
+const email = sessionStorage.getItem("forgotPasswordEmail");
+
+// Make the API request with the email as a URL parameter
+fetch(`/resend_otp?email=${encodeURIComponent(email)}`, {
+    method: "POST",
+    // Other request options as needed
+})
+.then(response => response.json())
+.then(data => {
+    if (data) {
+            Toastify({
+                text: data,
+                duration: 3000, // Duration of the toast message in milliseconds
+                backgroundColor: 'green',
+                close: true
+            }).showToast();
+        } else {
+            Toastify({
+                text: data,
+                duration: 3000,
+                backgroundColor: 'red',
+                close: true,
+            }).showToast();
+        }
+})
+.catch(error => {
+    // Handle errors
+});
+        } catch (error) {
+            console.error('Error deleting item:', error);
+        }
+    });
+});
 </script>
 
 </body>

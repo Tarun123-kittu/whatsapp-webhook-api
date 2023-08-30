@@ -5,7 +5,9 @@
 </head> 
 <body> 
     <form action="/login" method="post" >  
+        <h1>Login</h1>
         <div class="container">   
+
             <label>Username : </label>   
             <input type="text" placeholder="email" id="email" name="email" required>  
             <label>Password : </label>   
@@ -14,6 +16,7 @@
             Forgot <a href="/forget_password_"> password? </a>   
         </div> 
     </form>   
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
         document.querySelector('form').addEventListener('submit', async (event) => {
             event.preventDefault(); // Prevent default form submission
@@ -28,39 +31,30 @@
                 },
                 body: JSON.stringify({ email, password })
             });
-           
-            if (response.ok) {
-            const responseData = await response.json();
-            
-            if (responseData.data) {
-                const token = responseData.data.token;
-                
-                // Store the token in localStorage
-               localStorage.setItem('token', token);
-               const token_ = localStorage.getItem("token")
-                
-                 await fetch(`/dashboard`, {
-                    method: 'GET',
-                    headers:{
-                        'Authorization': `Bearer ${token_}`
-                    }
-                });
-                
-                // if (dashboardResponse.ok) {
-                //     // Redirect to the dashboard
-                    window.location.href = 'dashboard';
-                // } else {
-                //     console.error('Failed to fetch dashboard');
-                // }
+            const message = await response.json();
+            if (message) {
+                Toastify({
+                    text: message,
+                    duration: 3000, // Duration of the toast message in milliseconds
+                    backgroundColor: 'green',
+                    close: true
+                }).showToast();
+                if(message.message==="loggedIn"){
+                  window.location.href='dashboard'
+                }
             } else {
-                console.error('Token not found in response data');
+                Toastify({
+                    text: "Unauthorized user",
+                    duration: 3000,
+                    backgroundColor: 'red',
+                    close: true,
+                }).showToast();
             }
-        } else {
-            console.error('Login failed');
-        }
         });
     </script>
 </body> 
 </html>
+
+
 
 

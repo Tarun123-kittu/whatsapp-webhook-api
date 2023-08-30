@@ -176,29 +176,19 @@ exports.addqueries = async (req, res) => {
     }
 }
 
-exports.getqueries = async (req, res) => {
-    try {
-        let result = await queries.find();
-        res.render('dashboard', { result: result }); // Pass the 'queries' data to the template
-    } catch (error) {
-        console.log("ERROR::", error);
-    }
-};
-
 exports.updatequeries = async (req, res) => {
     try {
-
-        let { question, answer, step } = req.body;
+        let { question, answer } = req.body;
         let id = req.query.id;
-        console.log("Query ID:", id);
-
-        const updatedQuery = await queries.findOneAndUpdate(
+        if (!question || !answer) {
+            return res.json("fill all the fields")
+        } const updatedQuery = await queries.findOneAndUpdate(
             { _id: id },
-            { $set: { question: question, answer: answer, step: step } },
+            { $set: { question: question, answer: answer } },
             { new: true } // Return the updated document
         );
-
-        return res.redirect("/dashboard")
+      return res.json("query updated")
+        // return res.redirect("/dashboard")
     } catch (error) {
         console.log("ERROR::", error);
         res.status(500).send("Error updating query");
@@ -236,7 +226,6 @@ exports.dashboard = async (req, res) => {
     try {
         let result = await queries.find();
         res.render('dashboard', { result: result });
-        
     } catch (error) {
         console.log("ERROR::", error);
     }
@@ -245,9 +234,7 @@ exports.dashboard = async (req, res) => {
 exports.getqueriebyid = async (req, res) => {
     try {
         let id = req.query.id;
-
         let query = await queries.findOne({ _id: id });
-
         res.render('updatequerie', { query: query });
     } catch (error) {
         console.log("ERROR::", error);
@@ -259,22 +246,25 @@ exports.addmorequerie = async (req, res) => {
 }
 
 exports.addquerie = async (req, res) => {
-    let { question, answer } = req.body
-    if (!question || !answer) {
-        return res.send("fill all the fields")
-    }
-    let result = await queries.find()
-    if (!result) {
-        result = 1
-    }
-    let obj = {
-        question: question,
-        answer: answer,
-        step: result.length + 1
-    }
+    try {
+        let { question, answer } = req.body
+        if (!question || !answer) {
+            return res.json("fill all the fields")
+        }
+        let result = await queries.find()
+        if (!result) {
+            result = 1
+        }
+        let obj = {
+            question: question,
+            answer: answer,
+            step: result.length + 1
+        }
 
-    await queries.create(obj)
-    return res.redirect("/dashboard")
-    // return res.send("record added successfully")
-
+        await queries.create(obj)
+        return res.json("query added")
+        // return res.send("record added successfully")
+    } catch (error) {
+        console.log("error", error)
+    }
 }   

@@ -4,24 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>verify otp</title>
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.6.1/toastify.css" integrity="sha512-VSD3lcSci0foeRFRHWdYX4FaLvec89irh5+QAGc00j5AOdow2r5MFPhoPEYBUQdyarXwbzyJEO7Iko7+PnPuBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <h1>Verify otp</h1>
-    <p>Enter your received otp to continue.</p>
     
+   <div class="login_wrapper">
     <form action="/verify_otp" method="post" id="verifyotpForm">
-        <label for="otp">OTP:</label>
-        <input type="otp" id="otp" name="otp" required>
-        <button type="submit" >submit otp</button> <button class="resend-otp-button" > resend otp </button>
+        <h1>Verify otp</h1>
+        <p>Enter your received otp to continue.</p>
+       <div class="form-group">
+        <input type="otp" id="otp" class="form-control" name="otp" >
+       </div>
+     <div class="form_btn">
+        <button class="cmn_btn"  type="submit" >submit otp</button> <button class="resend-otp-button" > resend otp </button>
+     </div>
+     <div id="loader" style="display: none;">
+         <img src="/loader/loader.gif" alt="Loading..." />
+     </div>
     </form>
-    
+   </div>
+  
     <div id="message"></div>
     
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
     document.getElementById('verifyotpForm').addEventListener('submit', async (event) => {
-        event.preventDefault();
-        
+        event.preventDefault()
         const otp = document.getElementById('otp').value;
     
         const response = await fetch('/verify_otp', {
@@ -35,54 +45,70 @@
         const responseData = await response.json();
         let message=responseData
        if (message==="otp verified"){
+       
         window.location.href='/reset_password_'
+       }
+       let color
+       if(message==="Please fill the otp"||message==="enter valid otp"||message==="otp is not correct"||message==="otp time expired please resend otp"||message==="wrong otp")
+       {
+        color='red'
+       }else{
+        color='green'
        }
         if (response.ok) {
             Toastify({
                 text: message,
                 duration: 3000, // Duration of the toast message in milliseconds
-                backgroundColor: 'green',
+                backgroundColor: color,
                 close: true
             }).showToast();
         } else {
             Toastify({
                 text: message,
                 duration: 3000,
-                backgroundColor: 'red',
+                backgroundColor: color,
                 close: true,
                 
             }).showToast();
         }
     });
     const resendotpbutton = document.querySelectorAll('.resend-otp-button');
-
     resendotpbutton.forEach(button => {
     button.addEventListener('click', async () => {
-        const id = button.getAttribute('data-id');
+        event.preventDefault();
+        // const id = button.getAttribute('data-id');
         try {
             
             // Get the email from the stored session/cookie
 const email = sessionStorage.getItem("forgotPasswordEmail");
-
+const loader = document.getElementById('loader');
+        loader.style.display = 'flex'; // Show the loader
 // Make the API request with the email as a URL parameter
-fetch(`/resend_otp?email=${encodeURIComponent(email)}`, {
+ await fetch(`/resend_otp?email=${encodeURIComponent(email)}`, {
     method: "POST",
     // Other request options as needed
 })
 .then(response => response.json())
 .then(data => {
+    loader.style.display = 'none'
+    let color;
+   if(data==="Complete the step of forget password"||data==="You are not registered"){
+    color='red'
+   }else{
+    color='green'
+   }
     if (data) {
             Toastify({
                 text: data,
                 duration: 3000, // Duration of the toast message in milliseconds
-                backgroundColor: 'green',
+                backgroundColor: color,
                 close: true
             }).showToast();
         } else {
             Toastify({
                 text: data,
                 duration: 3000,
-                backgroundColor: 'red',
+                backgroundColor: color,
                 close: true,
             }).showToast();
         }
@@ -96,6 +122,6 @@ fetch(`/resend_otp?email=${encodeURIComponent(email)}`, {
     });
 });
 </script>
-
 </body>
 </html>
+

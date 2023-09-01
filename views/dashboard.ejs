@@ -1,33 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.6.1/toastify.css" integrity="sha512-VSD3lcSci0foeRFRHWdYX4FaLvec89irh5+QAGc00j5AOdow2r5MFPhoPEYBUQdyarXwbzyJEO7Iko7+PnPuBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="container">
-    <main>
-        <button class="logout-button" >logout</button> <button> <a href="/change_password"> change password </a></button>
-        <div>
-            <h1>Welcome to the Dashboard</h1><button ><a href="/add_morequerie">Add a querie</a></button>
-            <ul>
+    <div class="header">
+        <img src="/images/Senza-titolo.png" alt="">
+        <div class="drop-down">
+           <p class="client_name">DD</p>
+        <ul>
+            <li>
+                <button class="logout-button" >logout</button>
+            </li>
+            <li>
+                <a href="/change_password"> change password </a>
+            </li>
+        </ul>
+        </div>
+    </div>
+        <div class="dashboard_wrapper">
+          <div class="dash_head">
+            <h1>Welcome to the Dashboard</h1><a href="/add_morequerie" class="cmn_btn">Add a querie</a>
+          </div>
+            <ul class="products_list">
                 <% result.forEach((item)=> { %>
                     <li>
-                        <h2><%= item.question %></h2>
-                        <p><%= item.answer %></p>
+                        <div class="ans">
+                            <h2><%= item.question %></h2>
+                        <p ><%= item.answer %></p>
                         <p><%= item.step %></p>
-                        <button class="delete-button" data-id="<%= item._id %>">delete</button>
-                       <button> <a href="/updatequery?id=<%= item._id %>">update</a></button>
+                        </div>
+                      <div class="info_updates]">
+                        <button id="deletebtn" class="delete-button" data-id="<%= item._id %>">delete</button>
+                        <a class="cmn_btn" href="/updatequery?id=<%= item._id %>">update</a>
+                      </div>
                     </li>
                 <% }); %>
             </ul>
         </div>
         
-    </main>
+    
 
 </body>
 
 <script>
     const deleteButtons = document.querySelectorAll('.delete-button');
-     
     deleteButtons.forEach(button => {
         button.addEventListener('click', async () => {
             const id = button.getAttribute('data-id');
@@ -43,9 +61,9 @@
                     const listItem = button.parentElement;
                     listItem.remove();
                     window.location.href = 'dashboard';
-                    console.log('Item deleted successfully');
+                    // console.log('Item deleted successfully');
                 } else {
-                    console.error('Failed to delete item');
+                    // console.error('Failed to delete item');
                 }
             } catch (error) {
                 console.error('Error deleting item:', error);

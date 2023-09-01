@@ -4,7 +4,8 @@ const axios = require("axios");
 require('dotenv').config();
 const token = process.env.TOKEN;
 const mytoken = process.env.MYTOKEN;
-const queries = require("../models/queries")
+const queries = require("../models/queries");
+const { find } = require('../models/user');
 
 
 
@@ -35,14 +36,91 @@ exports.test2 = async (req, res) => {
     res.send("hiii");
 }
 
+// exports.webhook_ = async (req, res) => {
+
+//     let body_param = req.body;
+
+//     console.log(JSON.stringify(body_param, null, 2));
+
+//     if (body_param.object) {
+//         console.log("inside body param");
+//         if (body_param.entry &&
+//             body_param.entry[0].changes &&
+//             body_param.entry[0].changes[0].value.messages &&
+//             body_param.entry[0].changes[0].value.messages[0]
+//         ) {
+//             let phon_no_id = body_param.entry[0].changes[0].value.metadata.phone_number_id;
+//             let from = body_param.entry[0].changes[0].value.messages[0].from;
+//             let msg_body = body_param.entry[0].changes[0].value.messages[0].text.body;
+
+//             console.log("phone number " + phon_no_id);
+//             console.log("from " + from);
+//             console.log("boady param " + msg_body);
+//             const numberPattern = /^[1-9]|10$/;
+//             const status = numberPattern.test(msg_body);
+//             var customizedMessage = "Welcome to Dolomites Dream help center! 📞"
+//             if (status === false) {
+//                 var customizedMessage = `
+//                                 Welcome to Dolomites Dream help center! 📞  
+
+//                                 Please select a number corresponding to your question:
+
+//                                 1. Which products do we find in apartment/home?
+//                                 2. Troubles with safety box for keys, how it works?
+//                                 3. Wifi; password?
+//                                 4. Is there a parking lot?
+//                                 5. Is tap water drinkable?
+//                                 6. Where to put rubbish?
+//                                 7. Missing Electricity / electricity lack
+//                                 8. Is it possible for an early check-in?
+//                                 9. Is it possible for a late check-out?
+
+//                                 Simply reply with the number of the question you're interested in, and we'll provide you with the answer you need. If you have any other questions, feel free to ask! 😊
+//                                 `.trim().replace(/^\s+/gm, '');
+
+//             } else {
+//                 var selectedQuestionNumbers = msg_body
+//                     .split(',')
+//                     .map(number => parseInt(number.trim()))
+//                     .filter(number => !isNaN(number) && number >= 1 && number <= qaData.length);
+
+//                 // Generate the customized message
+//                 var customizedMessage = selectedQuestionNumbers.map(number => {
+//                     const qaPair = qaData[number - 1]; // Arrays are 0-indexed
+//                     if (qaPair) {
+//                         return `${number}. ${qaPair.question}\n${qaPair.answer}\n`;
+//                     }
+//                 }).join('\n');
+//             }
+
+//             axios({
+//                 method: "POST",
+//                 url: "https://graph.facebook.com/v13.0/" + phon_no_id + "/messages?access_token=" + token,
+//                 data: {
+//                     messaging_product: "whatsapp",
+//                     to: from,
+//                     text: {
+//                         body: customizedMessage
+//                     }
+//                 },
+//                 headers: {
+//                     "Content-Type": "application/json"
+//                 }
+
+//             });
+
+//             res.sendStatus(200);
+//         } else {
+//             res.sendStatus(404);
+//         }
+
+//     }
+// };
+
+
 exports.webhook_ = async (req, res) => {
-
     let body_param = req.body;
-
-    console.log(JSON.stringify(body_param, null, 2));
-
     if (body_param.object) {
-        console.log("inside body param");
         if (body_param.entry &&
             body_param.entry[0].changes &&
             body_param.entry[0].changes[0].value.messages &&
@@ -52,49 +130,59 @@ exports.webhook_ = async (req, res) => {
             let from = body_param.entry[0].changes[0].value.messages[0].from;
             let msg_body = body_param.entry[0].changes[0].value.messages[0].text.body;
 
-            console.log("phone number " + phon_no_id);
-            console.log("from " + from);
-            console.log("boady param " + msg_body);
             const numberPattern = /^[1-9]|10$/;
             const status = numberPattern.test(msg_body);
-            var customizedMessage = "Welcome to Dolomites Dream help center! 📞"
             if (status === false) {
-                var customizedMessage = `
-                                Welcome to Dolomites Dream help center! 📞
-    
-                                Please select a number corresponding to your question:
-    
-                                1. Which products do we find in apartment/home?
-                                2. Troubles with safety box for keys, how it works?
-                                3. Wifi; password?
-                                4. Is there a parking lot?
-                                5. Is tap water drinkable?
-                                6. Where to put rubbish?
-                                7. Missing Electricity / electricity lack
-                                8. Is it possible for an early check-in?
-                                9. Is it possible for a late check-out?
-    
-                                Simply reply with the number of the question you're interested in, and we'll provide you with the answer you need. If you have any other questions, feel free to ask! 😊
-                                `.trim().replace(/^\s+/gm, '');
+                let allqueries = await queries.find()
+                const filteredAndSorted = allqueries.sort((a, b) => a.step - b.step);
 
+                let customizedMessage_ = "Welcome to Dolomites Dream help center! 📞"
+                customizedMessage_ = filteredAndSorted.map((element, index) => {
+                    return element.step + "." + element.question
+                })
+                customizedMessage_.unshift('Please select a number corresponding to your question:', 'Welcome to Dolomites Dream help center! 📞');
+                customizedMessage_.push("Simply reply with the number of the question you're interested in, and we'll provide you with the answer you need. If you have any other questions, feel free to ask! 😊")
+                var customizedMessage = customizedMessage_.join('\n');
+                
             } else {
-                var selectedQuestionNumbers = msg_body
-                    .split(',')
-                    .map(number => parseInt(number.trim()))
-                    .filter(number => !isNaN(number) && number >= 1 && number <= qaData.length);
-
-                // Generate the customized message
-                var customizedMessage = selectedQuestionNumbers.map(number => {
-                    const qaPair = qaData[number - 1]; // Arrays are 0-indexed
-                    if (qaPair) {
-                        return `${number}. ${qaPair.question}\n${qaPair.answer}\n`;
+                let qaData = await queries.find()
+                if (qaData.length > 0) {
+                    var selectedQuestionNumbers = msg_body
+                        .split(',')
+                        .map(number => parseInt(number.trim()))
+                        .filter(number => !isNaN(number) && number >= 1 && number <= qaData.length);
+                    if (selectedQuestionNumbers.length < 1) {
+                        let allqueries = await queries.find()
+                        const filteredAndSorted = allqueries.sort((a, b) => a.step - b.step);
+        
+                        let customizedMessage_ = "Welcome to Dolomites Dream help center! 📞"
+                        customizedMessage_ = filteredAndSorted.map((element, index) => {
+                            return element.step + "." + element.question
+                        })
+                        customizedMessage_.unshift('Please select a number corresponding to your question:', 'Welcome to Dolomites Dream help center! 📞');
+                        customizedMessage_.push("Simply reply with the number of the question you're interested in, and we'll provide you with the answer you need. If you have any other questions, feel free to ask! 😊")
+                        var msg = customizedMessage_.join('\n');
+                         var customizedMessage = msg
+                    }else{
+                       
+                            selectedQuestionNumbers= selectedQuestionNumbers.filter((item,
+                                index) => selectedQuestionNumbers.indexOf(item) === index);
+                        
+                          // Generate the customized message
+                    var customizedMessage = selectedQuestionNumbers.map(number => {
+                        const qaPair = qaData.find(item => item.step === number); // Find the QA pair with matching step
+                        if (qaPair) {
+                            return `${number}. ${qaPair.question}\n${qaPair.answer}\n`;
+                        }
+                    }).join('\n');
                     }
-                }).join('\n');
+                } else {
+                    return res.json("There is no stored queries")
+                }
             }
-
             axios({
                 method: "POST",
-                url: "https://graph.facebook.com/v13.0/" + phon_no_id + "/messages?access_token=" + token,
+                url: "https://graph.facebook.com/v17.0/" + phon_no_id + "/messages?access_token=" + token,
                 data: {
                     messaging_product: "whatsapp",
                     to: from,
@@ -114,8 +202,43 @@ exports.webhook_ = async (req, res) => {
         }
 
     }
-
 };
+
+
+// exports.webhook_ = async (req, res) => {
+//     let msg_body=req.body.messages
+//    let allqueries= await queries.find()
+//    const filteredAndSorted = allqueries.sort((a,b) => a.step - b.step);
+//    let customizedMessage_ = "Welcome to Dolomites Dream help center! 📞"
+//    customizedMessage_ = filteredAndSorted.map((element,index)=>{
+//     return element.step +"." + element.question
+//    })
+//    customizedMessage_.unshift('Please select a number corresponding to your question:', 'Welcome to Dolomites Dream help center! 📞');
+//    customizedMessage_.push("Simply reply with the number of the question you're interested in, and we'll provide you with the answer you need. If you have any other questions, feel free to ask! 😊")
+
+// var customizedMessage = customizedMessage_.join('\n')
+// let qaData=await queries.find()
+//                 if(qaData.length>0){ 
+//                     var selectedQuestionNumbers = msg_body
+//                     .split(',')
+//                     .map(number => parseInt(number.trim()))
+//                     .filter(number => !isNaN(number) && number >= 1 && number <= qaData.length);
+//                    console.log("selected ",selectedQuestionNumbers.length)
+//                    if(selectedQuestionNumbers.length<1){
+//                     return res.send(customizedMessage)
+//                    }
+//                 // Generate the customized message
+//                 var customizedMessage = selectedQuestionNumbers.map(number => {
+//                     const qaPair = qaData.find(item => item.step === number); // Find the QA pair with matching step
+//                     if (qaPair) {
+//                         return `${number}. ${qaPair.question}\n${qaPair.answer}\n`;
+//                     }
+//                 }).join('\n');
+
+//                 return res.send(customizedMessage)
+// }
+// }
+
 
 exports.addqueries = async (req, res) => {
     try {
@@ -187,7 +310,7 @@ exports.updatequeries = async (req, res) => {
             { $set: { question: question, answer: answer } },
             { new: true } // Return the updated document
         );
-      return res.json("query updated")
+        return res.json("query updated")
         // return res.redirect("/dashboard")
     } catch (error) {
         console.log("ERROR::", error);

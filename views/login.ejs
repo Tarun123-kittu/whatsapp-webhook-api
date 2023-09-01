@@ -2,20 +2,30 @@
 <html> 
 <head> 
     <title>Login</title> 
+    <link href="/css/style.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.6.1/toastify.css" integrity="sha512-VSD3lcSci0foeRFRHWdYX4FaLvec89irh5+QAGc00j5AOdow2r5MFPhoPEYBUQdyarXwbzyJEO7Iko7+PnPuBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head> 
 <body> 
+   <div class="login_wrapper">
     <form action="/login" method="post" >  
         <h1>Login</h1>
         <div class="container">   
 
-            <label>Username : </label>   
-            <input type="text" placeholder="email" id="email" name="email" required>  
-            <label>Password : </label>   
-            <input type="password" placeholder="Enter Password" id="password" name="password" required>  
-            <button type="submit">Login</button>    
-            Forgot <a href="/forget_password_"> password? </a>   
+           <div class="form-group">
+            <label>User Name : </label>   
+            <input type="text" class="form-control" placeholder="email" id="email" name="email" > 
+           </div> 
+            <div class="form-group">
+                <label>Password : </label>   
+            <input type="password" class="form-control" placeholder="Enter Password" id="password" name="password" >  
+            </div>
+           <div class="form_btn">
+            <button type="submit" class="cmn_btn">Login</button>    
+             <a href="/forget_password_">Forgot password? </a> 
+           </div>  
         </div> 
-    </form>   
+    </form>  
+   </div> 
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
         document.querySelector('form').addEventListener('submit', async (event) => {
@@ -32,11 +42,19 @@
                 body: JSON.stringify({ email, password })
             });
             const message = await response.json();
+            
+            let color;
+            if(message==='Fill all the fields'||message==="This email is not registered"||message==="Pasword dosen't match")
+            {
+                color='red'
+            }else{
+                color='green'
+            }
             if (message) {
                 Toastify({
                     text: message,
                     duration: 3000, // Duration of the toast message in milliseconds
-                    backgroundColor: 'green',
+                    backgroundColor: color,
                     close: true
                 }).showToast();
                 if(message.message==="loggedIn"){
@@ -46,7 +64,7 @@
                 Toastify({
                     text: "Unauthorized user",
                     duration: 3000,
-                    backgroundColor: 'red',
+                    backgroundColor: color,
                     close: true,
                 }).showToast();
             }

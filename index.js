@@ -3,7 +3,7 @@ const body_parser = require("body-parser");
 const mongoose= require("mongoose")
 const cors= require("cors")
 const session = require("express-session")
-// var cookieParser = require('cookie-parser')
+
 
 // ... other code ...
 
@@ -26,7 +26,8 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }));
-// app.use(cookieParser())
+app.use(express.static(__dirname + '/public'));
+
 
 
 
@@ -45,7 +46,6 @@ app.listen(process.env.PORT, () => {
 
 
 
-
 mongoose.set('strictQuery', false);
 mongoose.connect("mongodb://127.0.0.1:27017/whatsShare?readPreference=primary&directConnection=true&ssl=false",
   {
@@ -54,16 +54,10 @@ mongoose.connect("mongodb://127.0.0.1:27017/whatsShare?readPreference=primary&di
   }
 );
 
-app.get('/', (req, res) => {
-  
-let user={
-  name:"akshita"
-}
-  res.render('login',{user:user}); // Renders views/dashboard.ejs
-});
 
-
-
+app.get("/",async(req,res)=>{
+  return res.render("login")
+})
 
 
 

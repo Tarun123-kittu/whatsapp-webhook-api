@@ -1,0 +1,229 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap');
+
+body{
+    margin: 0px;
+    font-family: Poppins;
+}
+/* header css  */
+.header {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px 30px;
+    background: #fff;
+    box-shadow: 0px 0px 5px rgba(0,0,0,20%);
+}
+
+.drop-down {
+    position: relative;
+}
+.dash_head a,.products_list a {
+    line-height: 40px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+   
+    padding: 0px 10px;
+    border: transparent;
+}
+.drop-down p {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0px 0px 7px rgba(0,0,0,20%);
+    text-align: center;
+    line-height: 40px;
+    font-weight: bold;
+    margin-left: auto;
+    cursor: pointer;
+}
+.dash_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+ul.products_list li {
+    list-style: none;
+}
+
+ul.products_list {
+    padding: 0px;
+    display: grid;
+    flex-wrap: wrap;
+    gap: 16px;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+ul.products_list li {
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0px 0px 5px rgba(0,0,0,20%);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+
+}
+.ans{
+flex-shrink: 1;
+flex-grow: 1;
+}
+.dashboard_wrapper{
+    padding: 20px;
+}
+ul.products_list h2 {
+    margin-top: 0px;
+    font-size: 18px;
+}
+.drop-down ul {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    padding: 0px;
+    right: 0px;
+    min-width: 150px;
+    background: #002040;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 0;
+    transition:ease all .3s;
+}
+.header img {
+    width: 100px;
+}
+.drop-down:hover ul {
+    visibility: visible;
+    opacity: 1;
+    transition:ease all .3s;
+}
+
+.drop-down {
+    display: inline;
+    width: 40px;
+}
+
+.drop-down ul li {
+    list-style: none;
+}
+
+.drop-down ul a {
+    padding: 10px 2px;
+    display: inline-block;
+    color:#fff;
+    font-size: 16px;
+    text-decoration: none;
+
+}
+
+.drop-down ul button {
+    background: transparent;
+    border: transparent;
+    font-size: 16px;
+    padding-top: 10px;
+    width: 100%;
+    text-align: left;
+    color:#fff;
+    font-family: 'Poppins';
+}
+/* header css  */
+.login_wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login_wrapper.inner_wrapper {
+    min-height: calc(100vh - 98.91px);
+}
+.login_wrapper form {
+    max-width: 500px;
+    width: 100%;
+    padding: 30px;
+    box-shadow: 0px 0px 5px rgba(0,0,0,20%);
+    position: relative;
+}
+div#loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 0;
+    bottom: 0;
+    background: #00204026;
+}
+.login_wrapper h1 {
+    text-align: center;
+    margin-bottom: 32px;
+}
+.login_wrapper .form-group {
+    margin-bottom: 15px;
+}
+
+.login_wrapper textarea.form-control {
+    padding: 10px;
+    height: auto;
+    font-size: 14px;
+    font-family: "Poppins";
+}
+.login_wrapper .form-control {
+    width: 100%;
+    height: 40px;
+    padding: 0px 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    margin-top: 7px;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-family: "Poppins";
+    /* text-transform: capitalize; */
+}
+.form-control:focus-visible {
+    outline: unset;
+}
+.cmn_btn{
+    background-color: #002040;
+    min-width: 100px;
+    border:1px solid #002040;
+    height: 40px;
+    padding: 0px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    color: #fff;
+    text-transform: capitalize;
+
+}
+.form_btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 27px;
+}
+.form_btn a{
+    color: #002040;
+}
+.resend-otp-button{
+    background-color: #002040;
+    min-width: 100px;
+    border:1px solid #002040;
+    height: 40px;
+    padding: 0px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    color: #fff;
+    text-transform: capitalize;
+}
+#deletebtn{
+    background-color: #002040;
+    min-width: 100px;
+    border:1px solid #002040;
+    height: 40px;
+    padding: 0px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    color: #fff;
+    text-transform: capitalize; 
+}

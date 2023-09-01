@@ -1,17 +1,45 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <link href="/css/style.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.6.1/toastify.css" integrity="sha512-VSD3lcSci0foeRFRHWdYX4FaLvec89irh5+QAGc00j5AOdow2r5MFPhoPEYBUQdyarXwbzyJEO7Iko7+PnPuBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     </head>
     <body>
-        <h1>Add a querie</h1>
-        <form action="/add_querie" method="post" id="addqueries">
-            <label for="question">question:</label><br>
-            <input placeholder="question" type="text" id="question" name="question" ><br><br>
-            <label for="answer">answer:</label><br>
-            <input placeholder="answer" type="text" id="answer" name="answer"  ><br><br>
-            <button type="submit">submit</button>    
-          </form> 
+        <div class="header">
+           <a href="/dashboard"> <img  src="/images/Senza-titolo.png" alt=""></a>
+            <div class="drop-down">
+               <p class="client_name">TK</p>
+            <ul>
+                <li>
+                    <button class="logout-button" >logout</button>
+                </li>
+                 <li>
+                    <a href="/change_password"> change password </a>
+                </li>
+            </ul>
+            </div>
+        </div>
+        <div class="login_wrapper inner_wrapper">
+
+            <form action="/add_querie" method="post" id="addqueries">
+                <h1>Add a querie</h1>
+               <div class="form-group">
+                <label for="question">Question</label><br>
+                <input placeholder="Question" type="text" id="question" name="question" class="form-control">
+               </div>
+               <div class="form-group">
+    
+                   <label for="answer">Answer</label><br>
+                   <input placeholder="Answer" type="text" id="answer" name="answer" class="form-control">
+               </div>
+                <div class="form_btn">
+
+                    <button class="cmn_btn" type="submit">submit</button>    
+                </div>
+              </form> 
+            </div>
+            
     </body>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script>
@@ -28,11 +56,18 @@
             });
             const responseData = await response.json();
             let message=responseData
+            let color;
+            if(message==="fill all the fields")
+              {
+                color="red"
+              }else{
+                color='green'
+              }
             if (response.ok) {
                 Toastify({
                     text: message,
                     duration: 3000, // Duration of the toast message in milliseconds
-                    backgroundColor: 'green',
+                    backgroundColor: color,
                     close: true
                 }).showToast();
                 if(message==="query added"){
@@ -42,12 +77,19 @@
                 Toastify({
                     text: message,
                     duration: 3000,
-                    backgroundColor: 'red',
+                    backgroundColor: color,
                     close: true,
-                    
                 }).showToast();
             }
         });
-    
+        const logoutbutton = document.querySelectorAll('.logout-button');
+    logoutbutton.forEach(button => {
+        button.addEventListener('click', async () => {
+            const response = await fetch(`/logout`, {
+                    method: 'POST', 
+                });
+               window.location.href='/'
+    })
+})
     </script>
 </html>

@@ -50,15 +50,17 @@
             }else{
                 color='green'
             }
+            
             if (message) {
-                Toastify({
+                if(message.message==="loggedIn"){
+                  window.location.href='dashboard'
+                }else{
+                    Toastify({
                     text: message,
                     duration: 3000, // Duration of the toast message in milliseconds
                     backgroundColor: color,
                     close: true
                 }).showToast();
-                if(message.message==="loggedIn"){
-                  window.location.href='dashboard'
                 }
             } else {
                 Toastify({

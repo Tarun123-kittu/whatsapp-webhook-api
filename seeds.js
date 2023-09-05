@@ -11,8 +11,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/whatsShare?readPreference=primary&di
 );
 
 const seedData = [
-  { email: 'admin@gmail.com', password: 'admin1234' },
-  
+  { email: 'DolomitesDream@gmail.com', password: 'admin1234' },
 ];
 
 async function seed() {
@@ -23,5 +22,4 @@ async function seed() {
   console.log('Seed data inserted');
   mongoose.connection.close();
 }
-
 seed();

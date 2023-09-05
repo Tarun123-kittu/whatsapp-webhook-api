@@ -26,7 +26,6 @@ exports.webhook = async (req, res) => {
         } else {
             res.status(403);
         }
-
     }
 
 };
@@ -143,7 +142,6 @@ exports.webhook_ = async (req, res) => {
                 customizedMessage_.unshift('Please select a number corresponding to your question:', 'Welcome to Dolomites Dream help center! 📞');
                 customizedMessage_.push("Simply reply with the number of the question you're interested in, and we'll provide you with the answer you need. If you have any other questions, feel free to ask! 😊")
                 var customizedMessage = customizedMessage_.join('\n');
-                
             } else {
                 let qaData = await queries.find()
                 if (qaData.length > 0) {
@@ -164,7 +162,7 @@ exports.webhook_ = async (req, res) => {
                         var msg = customizedMessage_.join('\n');
                          var customizedMessage = msg
                     }else{
-                       
+                       //remove the duplicate from array
                             selectedQuestionNumbers= selectedQuestionNumbers.filter((item,
                                 index) => selectedQuestionNumbers.indexOf(item) === index);
                         
@@ -307,7 +305,7 @@ exports.updatequeries = async (req, res) => {
             return res.json("fill all the fields")
         } const updatedQuery = await queries.findOneAndUpdate(
             { _id: id },
-            { $set: { question: question, answer: answer } },
+            { $set: { question: question, answer: answer }},
             { new: true } // Return the updated document
         );
         return res.json("query updated")
@@ -334,8 +332,8 @@ exports.deletequeries = async (req, res) => {
 
         // Update step values for remaining documents
         await queries.updateMany(
-            { step: { $gt: docToDelete.step } },
-            { $inc: { step: -1 } }
+            { step: { $gt: docToDelete.step }},
+            { $inc: { step: -1 }}
         );
 
         return res.send("Selected query deleted successfully");
@@ -347,8 +345,14 @@ exports.deletequeries = async (req, res) => {
 
 exports.dashboard = async (req, res) => {
     try {
+        if (req.query.refresh === 'true') {
+            // Set cache control headers to prevent caching
+            res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+            res.header('Pragma', 'no-cache');
+            res.header('Expires', '0');
+        }
         let result = await queries.find();
-        res.render('dashboard', { result: result });
+       return  res.render('dashboard', { result: result });
     } catch (error) {
         console.log("ERROR::", error);
     }
@@ -358,14 +362,15 @@ exports.getqueriebyid = async (req, res) => {
     try {
         let id = req.query.id;
         let query = await queries.findOne({ _id: id });
-        res.render('updatequerie', { query: query });
+        
+        return res.render('updatequerie', { query: query });
     } catch (error) {
         console.log("ERROR::", error);
     }
 }
 
 exports.addmorequerie = async (req, res) => {
-    res.render("addqueries")
+  return  res.render("addqueries")
 }
 
 exports.addquerie = async (req, res) => {

@@ -13,7 +13,7 @@ const verifyToken = (req, res, next) => {
         if (token) {
             let user = jwt.verify(token, "HHH"); // Verify token using correct secret key
             
-            req.result =user
+            req.result = user 
           
             next();
         } else {

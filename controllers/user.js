@@ -71,7 +71,6 @@ exports.forgetpassword = async (req, res) => {
             $set: {
                 otp: code,
                 otp_createdAt: date,
-
             }
         })
 
@@ -81,12 +80,12 @@ exports.forgetpassword = async (req, res) => {
             // secure: true,
             service: 'gmail',
             auth: {
-                user: 'akshitatomarbca05@gmail.com',
+                user: 'DolomitesDream@gmail.com',
                 pass: process.env.GMAIL_PASSWORD
             }
         })
         let mailDetails = {
-            from: "akshitatomarbca05@gmail.com",
+            from: "DolomitesDream@gmail.com",
             to: email,
             subject: 'whatsAppbot reset password',
             text: 'whatsAppbot reset password',
@@ -101,7 +100,6 @@ exports.forgetpassword = async (req, res) => {
                 }
             })
     }
-
 
 }
 
@@ -169,12 +167,12 @@ exports.resendotp = async (req, res) => {
             // secure: true,
             service: 'gmail',
             auth: {
-                user: 'akshitatomarbca05@gmail.com',
+                user: 'DolomitesDream@gmail.com',
                 pass: process.env.GMAIL_PASSWORD
             }
         })
         let mailDetails = {
-            from: "akshitatomarbca05@gmail.com",
+            from: "DolomitesDream@gmail.com",
             to: email,
             subject: 'whatsAppbot resend password',
             text: 'whatsAppbot resend password',
@@ -232,12 +230,6 @@ exports.resetpassword = async (req, res) => {
     }
 }
 
-exports.logout = async (req, res) => {
-
-    req.session.destroy(); // Remove the entire session
-    res.clearCookie('jwt'); // Clear the JWT cookie
-    return res.send("token destroyed")
-}
 
 exports.getchangepassword = async (req, res) => {
     return res.render("changepassword")
@@ -276,4 +268,12 @@ exports.changepassword = async (req, res) => {
         }
     }
 
+}
+
+
+exports.logout = async (req, res) => {
+
+    req.session.destroy(); // Remove the entire session
+    res.clearCookie('jwt'); // Clear the JWT cookie
+    return res.send("token destroyed")
 }

@@ -15,7 +15,7 @@
         <h1>Verify otp</h1>
         <p>Enter your received otp to continue.</p>
        <div class="form-group">
-        <input type="otp" id="otp" class="form-control" name="otp" >
+        <input type="otp" id="otp" class="form-control" name="otp">
        </div>
      <div class="form_btn">
         <button class="cmn_btn"  type="submit" >submit otp</button> <button class="resend-otp-button" > resend otp </button>
@@ -25,7 +25,6 @@
      </div>
     </form>
    </div>
-  
     <div id="message"></div>
     
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
@@ -38,6 +37,7 @@
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
+
             },
             body: JSON.stringify({ otp })
         });

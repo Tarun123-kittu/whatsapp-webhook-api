@@ -28,7 +28,7 @@
                     <li>
                         <div class="ans">
                             <h2><%= item.question %></h2>
-                        <p ><%= item.answer %></p>
+                        <p><%= item.answer %></p>
                         <p><%= item.step %></p>
                         </div>
                       <div class="info_updates]">
@@ -39,9 +39,6 @@
                 <% }); %>
             </ul>
         </div>
-        
-    
-
 </body>
 
 <script>
@@ -56,11 +53,12 @@
                     'Content-Type': 'application/json'
                 },
                 });
+               
                 if (response.ok) {
                     // Remove the deleted item's HTML from the DOM
                     const listItem = button.parentElement;
                     listItem.remove();
-                    window.location.href = 'dashboard';
+                    window.location.href = 'dashboard?refresh=true';
                     // console.log('Item deleted successfully');
                 } else {
                     // console.error('Failed to delete item');

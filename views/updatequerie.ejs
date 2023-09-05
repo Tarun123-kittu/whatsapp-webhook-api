@@ -8,7 +8,7 @@
         <div class="header">
            <a href="/dashboard"><img src="/images/Senza-titolo.png" alt=""></a>
             <div class="drop-down">
-               <p class="client_name">TK</p>
+               <p class="client_name">DD</p>
             <ul>
                 <li>
                     <button class="logout-button" >logout</button>
@@ -20,7 +20,6 @@
             </div>
         </div>
         <div class="login_wrapper inner_wrapper">
-
             <form action="/update_queries" method="POST" id="updatequerie">
                 <h1>Update Query</h1>
                <div class="form-group">
@@ -28,12 +27,10 @@
                 <input type="text" id="question" name="question" class="form-control" value="<%= query.question %>" required>
                </div>
                <div class="form-group">
-
                 <label for="answer">Answer</label>
-                <textarea id="answer" name="answer" rows="6" class="form-control" required><%= query.answer %></textarea>
+                <textarea id="answer" name="answer" rows="6" class="form-control" ><%= query.answer %></textarea>
                 </div>
                 <div class="form_btn">
-
                     <button class="cmn_btn" type="submit" >Update</button>
                 </div>
             </form>
@@ -46,7 +43,7 @@
             const question = document.getElementById('question').value;
             const answer=document.getElementById("answer").value;
             const urlParams = new URLSearchParams(window.location.search);
-          const id = urlParams.get('id');
+             const id = urlParams.get('id');
             const response = await fetch(`/update_queries?id=${id}`, {
                 method: 'POST',
                 headers: {
@@ -63,15 +60,16 @@
             }else{
                 color='green'
             }
-            if (response.ok) {
-                Toastify({
+            if (message) {
+                if(message==="query updated"){
+                    window.location.href = 'dashboard?refresh=true';
+                }else{
+                    Toastify({
                     text: message,
                     duration: 3000, // Duration of the toast message in milliseconds
                     backgroundColor: color,
                     close: true
                 }).showToast();
-                if(message==="query updated"){
-                  window.location.href='dashboard'
                 }
             } else {
                 Toastify({
@@ -93,3 +91,4 @@
 })
     </script>
 </html>
+

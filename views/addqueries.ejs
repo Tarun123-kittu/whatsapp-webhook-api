@@ -9,7 +9,7 @@
         <div class="header">
            <a href="/dashboard"> <img  src="/images/Senza-titolo.png" alt=""></a>
             <div class="drop-down">
-               <p class="client_name">TK</p>
+               <p class="client_name">DD</p>
             <ul>
                 <li>
                     <button class="logout-button" >logout</button>
@@ -71,7 +71,7 @@
                     close: true
                 }).showToast();
                 if(message==="query added"){
-                  window.location.href='dashboard'
+                    window.location.href = 'dashboard?refresh=true';
                 }
             } else {
                 Toastify({
